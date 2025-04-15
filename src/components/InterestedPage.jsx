@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "./interestedPage.css";
+import "./InterestedPage.css";
 
 
 const InterestedPage = ({ interests, onInterestsChange }) => {
