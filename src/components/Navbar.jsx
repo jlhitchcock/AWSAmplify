@@ -30,12 +30,17 @@ function Navbar() {
 
     const signOutRedirect = () => {
         const clientId = "71jdc4b1eh18i8d6f4194f7b1p";
-        const logoutUri = "https://localhost:5173/home";
+        const logoutUri = import.meta.env.MODE === 'development'
+            ? "https://localhost:5173/home"
+            : "https://main.dx3zghecu9fe3.amplifyapp.com/home";
+
         const cognitoDomain = "https://ap-southeast-2i8rut828h.auth.ap-southeast-2.amazoncognito.com";
+
         window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
         auth.removeUser();
     };
-    
+
+
     useEffect(() => {
         const getUserType = async () => {
             if (auth.isAuthenticated) {
