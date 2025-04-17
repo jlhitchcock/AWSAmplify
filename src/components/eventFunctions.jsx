@@ -109,3 +109,42 @@ export const updateEvent = async (eventDetails) => {
     }
 }
 
+export const getTicketmasterEvents = async (body) => {
+    try {
+        const response = await APIWithToken(`event/fetchTicketmasterEvents`, "POST", body)
+        if (!response.ok) {
+            throw new Error("Failed to fetch ticketmaster Events");
+        }
+        const data = await response.json();
+        return data;  // this will return a single event
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+export const calculateTotalPages = async (body) => {
+    try {
+        const response = await APIWithToken(`event/calculateTotalPages`, "POST", body)
+        if (!response.ok) {
+            throw new Error("Failed to calculate total pages");
+        }
+        const data = await response.json();
+        return data;  // this will return a single event
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+export const fetchExternalEvent = async (body) => {
+    try {
+        const response = await APIWithToken(`event/fetchExternalEventDetails`, "POST", body)
+        if (!response.ok) {
+            throw new Error("Failed to fetch ticketmaster Event");
+        }
+        const data = await response.json();
+        return data;  // this will return a single event
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+

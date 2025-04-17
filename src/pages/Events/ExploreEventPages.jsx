@@ -3,7 +3,12 @@ import React, {useEffect, useState} from "react";
 import Navbar from "@/components/Navbar.jsx";
 import banner from "@/assets/exploreEvent.png";
 import EventPageCard from "@/components/EventPageCard.jsx";
-import {getEventsByCategory, getEventsBySearchTerm} from "@/components/eventFunctions.jsx";
+import {
+    calculateTotalPages,
+    getEventsByCategory,
+    getEventsBySearchTerm,
+    getTicketmasterEvents
+} from "@/components/eventFunctions.jsx";
 
 const ExploreEventPages = () => {
     const category = useParams();
@@ -133,7 +138,19 @@ const ExploreEventPages = () => {
             
         }
 
-        await calculateTotalPage(PAGE_SIZE, searchTerm);
+        
+        const pageBody = {
+            size: PAGE_SIZE,
+            category: category,
+            searchTerm: searchTerm,
+            isSearch: isSearch
+        }
+        
+        const pages = await calculateTotalPages(pageBody);
+        
+        setTotalPages(pages.totalPages)
+        
+        //await calculateTotalPage(PAGE_SIZE, searchTerm);
 
 
         // Fetch PAGE_SIZE amount of ticketmaster events, then splice the remainder from the front of the ticketmaster array
@@ -150,7 +167,25 @@ const ExploreEventPages = () => {
 
             setNoMoreWebsiteEvents(true)
             // fetch 5 ticketmaster events and store in array
-            ticketMasterEvents = await fetchTicketMasterEvents(5, ticketmasterEventsPage);
+            
+            const body = {
+                size: 5,
+                page: ticketmasterEventsPage,
+                category: category,
+                searchTerm: searchTerm,
+                isSearch: isSearch
+            }
+
+            const ticketData = await getTicketmasterEvents(body);
+            
+            if(ticketData) {
+                setTicketMasterEventsFetched(true);
+            }
+            
+            setTotalPages(ticketData.page.totalPages - 1);
+            ticketMasterEvents = ticketData._embedded?.events;
+
+            //ticketMasterEvents = await fetchTicketMasterEvents(5, ticketmasterEventsPage);
             
             setTicketmasterEventsPage(ticketmasterEventsPage + 1);
 

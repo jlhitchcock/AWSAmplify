@@ -39,6 +39,7 @@ import {
 import background from "@/assets/background.png"
 import Navbar from "@/components/Navbar"
 import { getCookie } from "@/components/Cookie.jsx"
+import {fetchExternalEvent} from "@/components/eventFunctions.jsx";
 
 const ExternalEventDetails = () => {
     const { eventId } = useParams()
@@ -128,8 +129,23 @@ const ExternalEventDetails = () => {
     }
 
     useEffect(() => {
-        fetchExternalEventDetails()
-    }, [eventId])
+        const getEventDetails = async () => {
+            try {
+                setLoading(true)
+                const response = await fetchExternalEvent({ eventId });
+                console.log(response);
+                setEventDetails(response);
+                document.title = `${response.name} | PLANIT`;
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching event details:", error);
+            }
+        };
+
+        if (eventId) {
+            getEventDetails();
+        }
+    }, [eventId]);
 
     // Format date and time
     const formatDate = (dateString) => {

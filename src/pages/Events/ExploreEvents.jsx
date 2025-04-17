@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 
 import EventCard from "@/components/EventCard.jsx";
-import {getEventsByCategory, getEventsBySearchTerm} from "@/components/eventFunctions.jsx"; // Assuming your image is in src/assets
+import {getEventsByCategory, getEventsBySearchTerm, getTicketmasterEvents} from "@/components/eventFunctions.jsx"; // Assuming your image is in src/assets
 
 function ExploreEvents() {
     const [popularEvents, setPopularEvents] = useState([]); 
@@ -118,7 +118,16 @@ function ExploreEvents() {
         if(numberWebsiteEvents !== 5) {
             
             // fetch 5 ticketmaster events and store in array
-            ticketMasterEvents = await fetchTicketMasterEvents(5 - numberWebsiteEvents, ticketmasterEventsPage, category);
+            const body = {
+                size: 5- numberWebsiteEvents,
+                page: ticketmasterEventsPage,
+                category: category
+            }
+            
+            const response = await getTicketmasterEvents(body);
+
+            ticketMasterEvents = response._embedded.events;
+            //ticketMasterEvents = await fetchTicketMasterEvents(5 - numberWebsiteEvents, ticketmasterEventsPage, category);
             
             setTicketmasterEventsPage(ticketmasterEventsPage + 1);
 
